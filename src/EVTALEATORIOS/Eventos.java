@@ -1,27 +1,6 @@
-package MTRJUEGO;
+package EVTALEATORIOS;
 
-import java.util.Random;
-
-public class SistemaClima {
-	
-	public static void generarEvento(Ciudad ciudad) {
-		
-		Random rnd = new Random();
-		
-		int evento = rnd.nextInt(3);
-		
-		switch (evento) {
-			case 0:
-				tormentaElectrica (ciudad);
-				break;
-			case 1:
-				olaDeCalor(ciudad);
-				break;
-			case 2:
-				vientosFuertes(ciudad);
-				break;
-		}
-	}
+public class Eventos {
 	
 	public static void tormentaElectrica(Ciudad ciudad) {
 		System.out.println("Tormenta eléctrica inminente: los generadores pierden el 10% de su salud");
