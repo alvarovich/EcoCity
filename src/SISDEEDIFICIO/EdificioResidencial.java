@@ -5,7 +5,7 @@ public class EdificioResidencial extends Edificio implements Mantenible {
     private int habitantes;
 
     public EdificioResidencial(String nombre, int costo, int consumoEnergia, int habitantes) {
-        super(nombre, costo, consumoEnergia, 300);  // costeReparacion: 300€
+        super(nombre, costo, consumoEnergia, 500);
         this.habitantes = habitantes;
     }
 
@@ -15,7 +15,9 @@ public class EdificioResidencial extends Edificio implements Mantenible {
     }
 
     @Override
-    public void reparar() { salud = 100; }
+    public void reparar() {
+        salud = 100;
+    }
 
     @Override
     public void desgastar(int cantidad) {
@@ -23,10 +25,12 @@ public class EdificioResidencial extends Edificio implements Mantenible {
         if (salud < 0) salud = 0;
     }
 
-    public int getHabitantes() { return habitantes; }
+    public int getHabitantes() {
+        return habitantes;
+    }
 
     @Override
     public String toString() {
-        return nombre + " [Salud: " + salud + "% | Habitantes: " + habitantes + " | Reparación: " + costeReparacion + "€]";
+        return nombre + " [Salud: " + salud + "% | Habitantes: " + habitantes + " | Reparacion: " + costeReparacion + "EUR]";
     }
 }

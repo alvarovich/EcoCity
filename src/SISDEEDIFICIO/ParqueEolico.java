@@ -3,38 +3,38 @@ package SISDEEDIFICIO;
 public class ParqueEolico extends EdificioIndustrial implements Mantenible {
 
     public ParqueEolico() {
-        super("Parque Eólico", 3000, 0, 500);  // costeReparacion: 500€
+        super("Parque Eolico", 3000, 0, 800);
     }
 
     @Override
     public double producirRecurso() {
-    	return 120;
-    	}
+        return 120;
+    }
 
     @Override
     public String getTipoRecurso() {
-    	return "Energía";
-    	}
+        return "Energia";
+    }
 
     @Override
     public void aplicarEfectoMensual() {
-        System.out.println(nombre + " genera energía eólica. [Salud: " + salud + "%]");
+        System.out.println(nombre + " genera energia eolica. [Salud: " + salud + "%]");
     }
 
     @Override
     public void reparar() {
-    	salud = 100;
-    	}
+        salud = 100;
+    }
 
     @Override
     public void desgastar(int cantidad) {
         salud -= cantidad;
         if (salud < 0) salud = 0;
-        System.out.println("🌪️  " + nombre + " dañado. Salud actual: " + salud + "%");
+        System.out.println(nombre + " danado. Salud actual: " + salud + "%");
     }
 
     @Override
     public String toString() {
-        return nombre + " [Salud: " + salud + "% | Produce: 120 MW | Reparación: " + costeReparacion + "€]";
+        return nombre + " [Salud: " + salud + "% | Produce: 120 MW | Reparacion: " + costeReparacion + "EUR]";
     }
 }

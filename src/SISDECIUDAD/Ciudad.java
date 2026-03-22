@@ -16,7 +16,7 @@ public class Ciudad {
     private ArrayList<Edificio> edificios;
 
     public Ciudad() {
-        dinero    = 8000;   // Subido de 5000 a 8000
+        dinero    = 8000;
         energia   = 0;
         poblacion = 0;
         felicidad = 100;
@@ -27,12 +27,12 @@ public class Ciudad {
         if (dinero < edificio.getCosto()) {
             throw new FondosInsuficientesException(
                 "No tienes suficiente dinero para construir " + edificio.getNombre() +
-                ". Necesitas " + edificio.getCosto() + "€ y tienes " + dinero + "€."
+                ". Necesitas " + edificio.getCosto() + "EUR y tienes " + dinero + "EUR."
             );
         }
         dinero -= edificio.getCosto();
         edificios.add(edificio);
-        System.out.println(edificio.getNombre() + " construido. Costo: " + edificio.getCosto() + "€");
+        System.out.println(edificio.getNombre() + " construido. Costo: " + edificio.getCosto() + "EUR");
     }
 
     public ArrayList<Edificio> getEdificios() { return edificios; }
@@ -45,14 +45,14 @@ public class Ciudad {
     public int getFelicidad() { return felicidad; }
 
     public void mostrarEstado(int mes) {
-        System.out.println("\n══════════════════════════════════");
-        System.out.println("ECOCITY — MES " + mes);
-        System.out.println("══════════════════════════════════");
-        System.out.printf("Dinero:     %d€%n", dinero);
-        System.out.printf("Energía:    %d MW%n", energia);
-        System.out.printf("Población:  %d%n", poblacion);
-        System.out.printf("Felicidad:  %d%%%n", felicidad);
-        System.out.println("----------------------------------");
+        System.out.println("\n══════════════════════════════════════");
+        System.out.println("   ECOCITY - MES " + mes);
+        System.out.println("══════════════════════════════════════");
+        System.out.printf("  Dinero:     %dEUR%n", dinero);
+        System.out.printf("  Energia:    %d MW%n", energia);
+        System.out.printf("  Poblacion:  %d%n", poblacion);
+        System.out.printf("  Felicidad:  %d%%%n", felicidad);
+        System.out.println("--------------------------------------");
         if (edificios.isEmpty()) {
             System.out.println("  (Sin edificios construidos)");
         } else {
@@ -61,7 +61,7 @@ public class Ciudad {
                 System.out.println("    " + (i + 1) + ". " + edificios.get(i));
             }
         }
-        System.out.println("══════════════════════════════════");
+        System.out.println("══════════════════════════════════════");
     }
 
     public void calcularRecursos() {
@@ -78,22 +78,22 @@ public class Ciudad {
 
             if (e instanceof EdificioResidencial) {
                 poblacion += 50;
-                dinero    += 500;   // Subido de 100 a 500
-                System.out.println("Impuestos recaudados: +500€");
+                dinero    += 200;   // Bajado de 500 a 200
+                System.out.println("  Impuestos recaudados: +200EUR");
             }
 
             if (e instanceof EdificioComercial) {
-                dinero    += 800;   // Subido de 200 a 800
+                dinero    += 350;   // Bajado de 800 a 350
                 felicidad += 5;
                 if (felicidad > 100) felicidad = 100;
-                System.out.println("Ingresos comerciales: +800€");
+                System.out.println("  Ingresos comerciales: +350EUR");
             }
         }
 
         if (energia < 0) {
             felicidad -= 10;
             if (felicidad < 0) felicidad = 0;
-            System.out.println("Falta de energía (" + energia + " MW): la felicidad disminuye.");
+            System.out.println("Falta de energia (" + energia + " MW): la felicidad disminuye.");
         }
     }
 }
