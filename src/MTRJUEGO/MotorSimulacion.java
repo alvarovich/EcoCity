@@ -125,15 +125,24 @@ public class MotorSimulacion {
         }
     }
 
-    // ✅ CICLO MENSUAL CORREGIDO
     private void cicloMensual() {
 
-        for (Edificio e : ciudad.getEdificios()) {
-            e.aplicarEfectoMensual();
+        try {
+
+            ciudad.calcularRecursos();
+
+            for (Edificio e : ciudad.getEdificios()) {
+                e.aplicarEfectoMensual();
+            }
+
+            SistemaClima.generarEvento(ciudad);
+
+            mes++;
+
+        } catch (Exception e) {
+
+            System.out.println(e.getMessage());
+            System.out.println("La ciudad ha colapsado...");
         }
-
-        SistemaClima.generarEvento(ciudad);
-
-        mes++;
     }
 }
