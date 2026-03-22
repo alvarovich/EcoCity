@@ -1,7 +1,7 @@
 package SISDEEDIFICIO;
 
 /**
- * Central nuclear: maximo generador de energia pero peligrosa si se deteriora.
+ * Central nuclear: genera bastante energia pero es peligrosa si se deteriora.
  * Si su salud cae por debajo del 20% provoca una explosion que termina la partida.
  */
 public class CentralNuclear extends EdificioIndustrial implements Mantenible {
@@ -10,9 +10,10 @@ public class CentralNuclear extends EdificioIndustrial implements Mantenible {
         super("Central Nuclear", 10000, 0, 5000);
     }
 
+    /** Produce 200 MW por mes */
     @Override
     public double producirRecurso() {
-        return 500;
+        return 200;
     }
 
     @Override
@@ -26,7 +27,7 @@ public class CentralNuclear extends EdificioIndustrial implements Mantenible {
      */
     @Override
     public void aplicarEfectoMensual() {
-        System.out.println(nombre + " opera generando 500 MW. [Salud: " + salud + "%]");
+        System.out.println(nombre + " opera generando 200 MW. [Salud: " + salud + "%]");
         if (salud < 20) {
             throw new RuntimeException(
                 "Explosion en la Central Nuclear. Su salud cayo al " + salud + "%. La ciudad ha colapsado."
@@ -48,6 +49,6 @@ public class CentralNuclear extends EdificioIndustrial implements Mantenible {
 
     @Override
     public String toString() {
-        return nombre + " [Salud: " + salud + "% | Produce: 500 MW | Reparacion: " + costeReparacion + "EUR]";
+        return nombre + " [Salud: " + salud + "% | Produce: 200 MW | Reparacion: " + costeReparacion + "EUR]";
     }
 }

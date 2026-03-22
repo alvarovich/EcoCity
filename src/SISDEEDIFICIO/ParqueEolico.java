@@ -7,9 +7,10 @@ public class ParqueEolico extends EdificioIndustrial implements Mantenible {
         super("Parque Eolico", 3000, 0, 800);
     }
 
+    /** Produce 80 MW por mes */
     @Override
     public double producirRecurso() {
-        return 120;
+        return 80;
     }
 
     @Override
@@ -36,6 +37,6 @@ public class ParqueEolico extends EdificioIndustrial implements Mantenible {
 
     @Override
     public String toString() {
-        return nombre + " [Salud: " + salud + "% | Produce: 120 MW | Reparacion: " + costeReparacion + "EUR]";
+        return nombre + " [Salud: " + salud + "% | Produce: 80 MW | Reparacion: " + costeReparacion + "EUR]";
     }
 }
