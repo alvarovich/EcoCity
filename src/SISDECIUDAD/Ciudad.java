@@ -5,6 +5,7 @@ import SISDEEDIFICIO.Edificio;
 import SISDEEDIFICIO.GeneradorRecursos;
 import SISDEEDIFICIO.EdificioResidencial;
 import SISDEEDIFICIO.EdificioComercial;
+import EXCEPCIONES.FondosInsuficientesException;
 
 public class Ciudad {
 
@@ -15,74 +16,82 @@ public class Ciudad {
     private ArrayList<Edificio> edificios;
 
     public Ciudad() {
-        dinero = 5000;
-        energia = 0;
-        poblacion = 1000;
+        dinero    = 5000;
+        energia   = 0;
+        poblacion = 0;
         felicidad = 100;
         edificios = new ArrayList<>();
     }
 
-    public void agregarEdificio(Edificio edificio) {
+    public void agregarEdificio(Edificio edificio) throws FondosInsuficientesException {
+        if (dinero < edificio.getCosto()) {
+            throw new FondosInsuficientesException(
+                "No tienes suficiente dinero para construir " + edificio.getNombre() +
+                ". Necesitas " + edificio.getCosto() + "€ y tienes " + dinero + "€."
+            );
+        }
+        dinero -= edificio.getCosto();
         edificios.add(edificio);
+        System.out.println("✅ " + edificio.getNombre() + " construido. Costo: " + edificio.getCosto() + "€");
     }
 
-    public ArrayList<Edificio> getEdificios() {
-        return edificios;
-    }
+    public ArrayList<Edificio> getEdificios() { return edificios; }
 
-    public int getDinero() { return dinero; }
+    public int getDinero()    { return dinero; }
     public void setDinero(int dinero) { this.dinero = dinero; }
 
-    public int getEnergia() { return energia; }
+    public int getEnergia()   { return energia; }
     public int getPoblacion() { return poblacion; }
     public int getFelicidad() { return felicidad; }
 
     public void mostrarEstado(int mes) {
-
-        System.out.println("\n--- ESTADO DE ECOCITY - MES " + mes + " ---");
-        System.out.println("Recursos: $" + dinero +
-                " | Energía: " + energia +
-                " | Población: " + poblacion +
-                " | Felicidad: " + felicidad);
-
-        System.out.println("Edificios:");
-
-        for (int i = 0; i < edificios.size(); i++) {
-            System.out.println((i + 1) + ". " + edificios.get(i));
+        System.out.println("\n═══════════════════════════════════");
+        System.out.println("ECOCITY — MES " + mes);
+        System.out.println("═══════════════════════════════════");
+        System.out.printf("Dinero:     %d€%n", dinero);
+        System.out.printf("Energía:    %d MW%n", energia);
+        System.out.printf("Población:  %d%n", poblacion);
+        System.out.printf("Felicidad:  %d%%%n", felicidad);
+        System.out.println("-----------------------------------");
+        if (edificios.isEmpty()) {
+            System.out.println("  (Sin edificios construidos)");
+        } else {
+            System.out.println("  Edificios:");
+            for (int i = 0; i < edificios.size(); i++) {
+                System.out.println("    " + (i + 1) + ". " + edificios.get(i));
+            }
         }
+        System.out.println("═══════════════════════════════════");
     }
 
     public void calcularRecursos() {
-
         energia = 0;
 
         for (Edificio e : edificios) {
 
-            // PRODUCCIÓN
             if (e instanceof GeneradorRecursos) {
                 GeneradorRecursos g = (GeneradorRecursos) e;
-                energia += g.producirRecurso();
+                energia += (int) g.producirRecurso();
             }
 
-            // CONSUMO
             energia -= e.getConsumoEnergia();
 
-            // RESIDENCIAL
             if (e instanceof EdificioResidencial) {
                 poblacion += 50;
-                dinero += 100;
+                dinero    += 100;
             }
 
-            // COMERCIAL
             if (e instanceof EdificioComercial) {
-                dinero += 200;
+                dinero    += 200;
                 felicidad += 5;
+                if (felicidad > 100) felicidad = 100;
             }
         }
 
         if (energia < 0) {
             felicidad -= 10;
-            System.out.println("Falta de energía: la felicidad disminuye");
+            if (felicidad < 0) felicidad = 0;
+            System.out.println("Falta de energía (" + energia + " MW): la felicidad disminuye.");
         }
     }
 }

@@ -13,14 +13,16 @@ public class CentralNuclear extends EdificioIndustrial implements Mantenible {
 
     @Override
     public String getTipoRecurso() {
-        return "Energia";
+        return "Energía";
     }
 
     @Override
     public void aplicarEfectoMensual() {
-
+        System.out.println(nombre + " opera generando 500 unidades de energía. [Salud: " + salud + "%]");
         if (salud < 20) {
-            throw new RuntimeException("💥 Explosión en la central nuclear!");
+            throw new RuntimeException(
+                "¡Explosión en la Central Nuclear! Su salud cayó al " + salud + "%. ¡La ciudad ha colapsado!"
+            );
         }
     }
 
@@ -33,5 +35,11 @@ public class CentralNuclear extends EdificioIndustrial implements Mantenible {
     public void desgastar(int cantidad) {
         salud -= cantidad;
         if (salud < 0) salud = 0;
+        System.out.println(nombre + " dañada. Salud actual: " + salud + "%");
+    }
+
+    @Override
+    public String toString() {
+        return nombre + " [Salud: " + salud + "% | Produce: 500 energía]";
     }
 }
