@@ -14,6 +14,7 @@ import EXCEPCIONES.FondosInsuficientesException;
 public class Ciudad {
 
     private int dinero;
+    // La energia se acumula mes a mes sumando produccion y restando consumo
     private int energia;
     private int poblacion;
     private int felicidad;
@@ -29,8 +30,9 @@ public class Ciudad {
     }
 
     /**
-     * Intenta construir un edificio. Lanza FondosInsuficientesException
-     * si el jugador no tiene dinero suficiente.
+     * Intenta construir un edificio descontando su coste.
+     * Lanza FondosInsuficientesException si no hay dinero suficiente.
+     * La energia no se modifica aqui, se actualiza al pasar mes.
      */
     public void agregarEdificio(Edificio edificio) throws FondosInsuficientesException {
         if (dinero < edificio.getCosto()) {
@@ -42,6 +44,7 @@ public class Ciudad {
         dinero -= edificio.getCosto();
         edificios.add(edificio);
         System.out.println(edificio.getNombre() + " construido. Costo: " + edificio.getCosto() + "EUR");
+        System.out.println("Los efectos sobre la energia se aplicaran al pasar mes.");
     }
 
     public ArrayList<Edificio> getEdificios() {
@@ -90,28 +93,41 @@ public class Ciudad {
     }
 
     /**
-     * Calcula los recursos del mes: energia producida y consumida,
-     * ingresos por edificios y penalizaciones por baja salud o falta de energia.
+     * Actualiza todos los recursos del mes acumulando sobre los valores anteriores.
+     * Cada mes se suman las producciones y se restan los consumos sin resetear la energia,
+     * de forma que el balance crece o decrece progresivamente segun los edificios activos.
      */
     public void calcularRecursos() {
-        energia = 0;
+
+        // Variables locales para mostrar el resumen del mes sin mezclar con el acumulado
+        int produccionMes = 0;
+        int consumoMes    = 0;
 
         for (Edificio e : edificios) {
 
-            // Sumamos la energia que produce el edificio si es generador
+            // Los generadores aportan energia al balance acumulado
             if (e instanceof GeneradorRecursos) {
-                energia += (int) ((GeneradorRecursos) e).producirRecurso();
+                int producido = (int) ((GeneradorRecursos) e).producirRecurso();
+                energia      += producido;
+                produccionMes += producido;
+                System.out.println("  " + e.getNombre() + " genera " + producido + " MW");
             }
 
-            // Restamos el consumo energetico del edificio
-            energia -= e.getConsumoEnergia();
+            // Todos los edificios con consumo restan energia cada mes
+            if (e.getConsumoEnergia() > 0) {
+                energia    -= e.getConsumoEnergia();
+                consumoMes += e.getConsumoEnergia();
+                System.out.println("  " + e.getNombre() + " consume " + e.getConsumoEnergia() + " MW");
+            }
 
+            // Los residenciales generan poblacion e impuestos cada mes
             if (e instanceof EdificioResidencial) {
                 poblacion += 50;
                 dinero    += 200;
                 System.out.println("  Impuestos recaudados: +200EUR");
             }
 
+            // Los comerciales generan ingresos y suben la felicidad cada mes
             if (e instanceof EdificioComercial) {
                 dinero    += 350;
                 felicidad += 5;
@@ -119,7 +135,7 @@ public class Ciudad {
                 System.out.println("  Ingresos comerciales: +350EUR");
             }
 
-            // Un edificio muy deteriorado penaliza la felicidad de la ciudad
+            // Un edificio en ruinas penaliza la felicidad
             if (e.getSalud() == 0) {
                 felicidad -= 5;
                 if (felicidad < 0) felicidad = 0;
@@ -127,11 +143,17 @@ public class Ciudad {
             }
         }
 
-        // Sin energia suficiente los ciudadanos pierden felicidad
+        // Mostramos el resumen energetico del mes
+        System.out.println("--------------------------------------");
+        System.out.println("  Produccion este mes: +" + produccionMes + " MW");
+        System.out.println("  Consumo este mes:    -" + consumoMes    + " MW");
+        System.out.println("  Energia acumulada:    " + energia       + " MW");
+
+        // Si el balance acumulado es negativo la ciudad sufre apagones
         if (energia < 0) {
             felicidad -= 10;
             if (felicidad < 0) felicidad = 0;
-            System.out.println("Falta de energia (" + energia + " MW): la felicidad disminuye.");
+            System.out.println("  Apagon: energia negativa, felicidad disminuye.");
         }
     }
 }
