@@ -1,5 +1,6 @@
 package SISDEEDIFICIO;
 
+/** Centro comercial: genera ingresos y aumenta la felicidad cada mes */
 public class EdificioComercial extends Edificio implements Mantenible {
 
     public EdificioComercial() {

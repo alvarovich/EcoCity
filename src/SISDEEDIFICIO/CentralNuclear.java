@@ -1,5 +1,9 @@
 package SISDEEDIFICIO;
 
+/**
+ * Central nuclear: maximo generador de energia pero peligrosa si se deteriora.
+ * Si su salud cae por debajo del 20% provoca una explosion que termina la partida.
+ */
 public class CentralNuclear extends EdificioIndustrial implements Mantenible {
 
     public CentralNuclear() {
@@ -16,6 +20,10 @@ public class CentralNuclear extends EdificioIndustrial implements Mantenible {
         return "Energia";
     }
 
+    /**
+     * Ademas de informar de su estado, comprueba si la salud es critica.
+     * Por debajo del 20% lanza una excepcion que colapsa la ciudad.
+     */
     @Override
     public void aplicarEfectoMensual() {
         System.out.println(nombre + " opera generando 500 MW. [Salud: " + salud + "%]");

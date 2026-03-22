@@ -7,12 +7,17 @@ import SISDEEDIFICIO.EdificioResidencial;
 import SISDEEDIFICIO.EdificioComercial;
 import EXCEPCIONES.FondosInsuficientesException;
 
+/**
+ * Representa la ciudad del jugador. Almacena los recursos globales
+ * y la lista de edificios construidos.
+ */
 public class Ciudad {
 
     private int dinero;
     private int energia;
     private int poblacion;
     private int felicidad;
+    // Lista central de edificios, recorrida cada mes por el motor
     private ArrayList<Edificio> edificios;
 
     public Ciudad() {
@@ -23,6 +28,10 @@ public class Ciudad {
         edificios = new ArrayList<>();
     }
 
+    /**
+     * Intenta construir un edificio. Lanza FondosInsuficientesException
+     * si el jugador no tiene dinero suficiente.
+     */
     public void agregarEdificio(Edificio edificio) throws FondosInsuficientesException {
         if (dinero < edificio.getCosto()) {
             throw new FondosInsuficientesException(
@@ -59,6 +68,7 @@ public class Ciudad {
         return felicidad;
     }
 
+    /** Muestra el estado actual de la ciudad con todos sus recursos y edificios */
     public void mostrarEstado(int mes) {
         System.out.println("\n══════════════════════════════════════");
         System.out.println("   ECOCITY - MES " + mes);
@@ -79,16 +89,21 @@ public class Ciudad {
         System.out.println("══════════════════════════════════════");
     }
 
+    /**
+     * Calcula los recursos del mes: energia producida y consumida,
+     * ingresos por edificios y penalizaciones por baja salud o falta de energia.
+     */
     public void calcularRecursos() {
         energia = 0;
 
         for (Edificio e : edificios) {
 
+            // Sumamos la energia que produce el edificio si es generador
             if (e instanceof GeneradorRecursos) {
-                GeneradorRecursos g = (GeneradorRecursos) e;
-                energia += (int) g.producirRecurso();
+                energia += (int) ((GeneradorRecursos) e).producirRecurso();
             }
 
+            // Restamos el consumo energetico del edificio
             energia -= e.getConsumoEnergia();
 
             if (e instanceof EdificioResidencial) {
@@ -103,8 +118,16 @@ public class Ciudad {
                 if (felicidad > 100) felicidad = 100;
                 System.out.println("  Ingresos comerciales: +350EUR");
             }
+
+            // Un edificio muy deteriorado penaliza la felicidad de la ciudad
+            if (e.getSalud() == 0) {
+                felicidad -= 5;
+                if (felicidad < 0) felicidad = 0;
+                System.out.println("  " + e.getNombre() + " en ruinas: -5 felicidad");
+            }
         }
 
+        // Sin energia suficiente los ciudadanos pierden felicidad
         if (energia < 0) {
             felicidad -= 10;
             if (felicidad < 0) felicidad = 0;

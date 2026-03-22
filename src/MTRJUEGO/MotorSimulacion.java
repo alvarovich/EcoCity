@@ -1,40 +1,42 @@
 package MTRJUEGO;
 
 import java.util.Scanner;
-
 import EVTALEATORIOS.SistemaClima;
 import EXCEPCIONES.FondosInsuficientesException;
-import PERSISTENCIA.GestorPartidas;
 import PERSISTENCIA.GestorUsuariosArchivo;
 import SISDECIUDAD.Ciudad;
 import SISDEEDIFICIO.*;
 import SISUSUARIOS.*;
 
+/**
+ * Motor principal del juego. Gestiona el registro, login,
+ * y el bucle de turnos mensuales.
+ */
 public class MotorSimulacion {
 
     private Ciudad ciudad;
     private int mes;
     private Scanner sc;
     private SisUsuarios sisUsuarios;
-    private GestorPartidas gestorPartidas;
+    // Gestiona el guardado de datos del jugador en archivo
     private GestorUsuariosArchivo gestorUsuarios;
 
     public MotorSimulacion() {
-        ciudad          = new Ciudad();
-        mes             = 1;
-        sc              = new Scanner(System.in);
-        sisUsuarios     = new SisUsuarios();
-        gestorPartidas  = new GestorPartidas();
-        gestorUsuarios  = new GestorUsuariosArchivo();
+        ciudad         = new Ciudad();
+        mes            = 1;
+        sc             = new Scanner(System.in);
+        sisUsuarios    = new SisUsuarios();
+        gestorUsuarios = new GestorUsuariosArchivo();
     }
 
+    /** Arranca el juego: registro, login y bucle principal */
     public void iniciar() {
 
         System.out.println("╔══════════════════════════╗");
         System.out.println("║   BIENVENIDO A ECOCITY   ║");
         System.out.println("╚══════════════════════════╝");
 
-        // REGISTRO
+        // Recogemos los datos del jugador antes de entrar al juego
         System.out.println("\n-- REGISTRO DE JUGADOR --");
         System.out.print("Introduce tu nombre: ");
         String nombre = sc.next();
@@ -43,13 +45,13 @@ public class MotorSimulacion {
         System.out.print("Elige una contrasena: ");
         String pass = sc.next();
 
+        // Creamos el jugador, lo registramos en memoria y guardamos sus datos
         Jugador jugador = new Jugador(nombre, nickname, pass);
         sisUsuarios.regUsuario(jugador);
         gestorUsuarios.guardarJugador(jugador);
-
         System.out.println("Jugador registrado correctamente.");
 
-        // LOGIN
+        // El login verifica que el jugador recuerde sus credenciales
         System.out.println("\n-- INICIO DE SESION --");
         Usuario usuarioActual = null;
 
@@ -69,13 +71,13 @@ public class MotorSimulacion {
         System.out.println("\nSesion iniciada como: " + usuarioActual.getNombre() +
                 " (nickname: " + usuarioActual.getNombreUsuario() + ")");
 
+        // Contabilizamos la partida al jugador
         if (usuarioActual instanceof Jugador) {
             ((Jugador) usuarioActual).sumarPartida();
         }
 
-        // BUCLE PRINCIPAL
+        // Bucle principal: cada iteracion es un turno de juego
         boolean ejecutando = true;
-
         while (ejecutando) {
             ciudad.mostrarEstado(mes);
             mostrarMenu();
@@ -93,7 +95,7 @@ public class MotorSimulacion {
                 case 2: reparar();      break;
                 case 3: cicloMensual(); break;
                 case 4:
-                    guardarYSalir(usuarioActual);
+                    System.out.println("Hasta pronto, " + usuarioActual.getNombre() + "!");
                     ejecutando = false;
                     break;
                 default:
@@ -102,15 +104,17 @@ public class MotorSimulacion {
         }
     }
 
+    /** Muestra las opciones disponibles cada turno */
     private void mostrarMenu() {
         System.out.println("\n¿Que deseas hacer?");
         System.out.println("  1. Construir edificio");
         System.out.println("  2. Reparar edificio");
         System.out.println("  3. Pasar mes");
-        System.out.println("  4. Guardar y salir");
+        System.out.println("  4. Salir");
         System.out.print("Opcion: ");
     }
 
+    /** Muestra el catalogo de edificios y construye el elegido descontando su coste */
     private void construir() {
         System.out.println("\n¿Que edificio quieres construir?");
         System.out.println("  1. Parque Eolico          (3.000EUR | +120 MW)");
@@ -140,6 +144,7 @@ public class MotorSimulacion {
         }
     }
 
+    /** Permite reparar un edificio daniado descontando el coste de reparacion */
     private void reparar() {
         if (ciudad.getEdificios().isEmpty()) {
             System.out.println("No hay edificios construidos.");
@@ -165,16 +170,17 @@ public class MotorSimulacion {
 
             if (e instanceof Mantenible) {
 
+                // No tiene sentido reparar algo que ya esta al maximo
                 if (e.getSalud() == 100) {
-                    System.out.println(e.getNombre() + " ya esta en perfecto estado, no necesita reparacion.");
+                    System.out.println(e.getNombre() + " ya esta en perfecto estado.");
                     return;
                 }
 
                 int coste = e.getCosteReparacion();
 
                 if (ciudad.getDinero() < coste) {
-                    System.out.println("No tienes suficiente dinero para reparar " + e.getNombre() +
-                            ". Necesitas " + coste + "EUR y tienes " + ciudad.getDinero() + "EUR.");
+                    System.out.println("Fondos insuficientes. Necesitas " + coste +
+                            "EUR y tienes " + ciudad.getDinero() + "EUR.");
                     return;
                 }
 
@@ -190,9 +196,12 @@ public class MotorSimulacion {
         }
     }
 
+    /**
+     * Procesa un mes: calcula recursos, aplica efectos de cada edificio
+     * y lanza un evento climatico aleatorio. Si hay catastrofe, termina el juego.
+     */
     private void cicloMensual() {
         System.out.println("\nProcesando mes " + mes + "...");
-
         try {
             ciudad.calcularRecursos();
 
@@ -208,11 +217,5 @@ public class MotorSimulacion {
             System.out.println("La ciudad ha colapsado. Fin de la partida.");
             System.exit(0);
         }
-    }
-
-    private void guardarYSalir(Usuario usuario) {
-        String ruta = "partida_" + usuario.getNombreUsuario() + ".txt";
-        gestorPartidas.guardarPartida(ciudad, ruta);
-        System.out.println("Hasta pronto, " + usuario.getNombre() + "!");
     }
 }

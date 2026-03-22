@@ -1,5 +1,6 @@
 package SISUSUARIOS;
 
+/** Tipo de usuario jugador. Extiende Usuario añadiendo estadisticas de partida */
 public class Jugador extends Usuario {
 
     private int partidasJugadas;
@@ -19,6 +20,7 @@ public class Jugador extends Usuario {
         return puntuacion;
     }
 
+    /** Incrementa el contador de partidas al iniciar una nueva sesion */
     public void sumarPartida() {
         partidasJugadas++;
     }

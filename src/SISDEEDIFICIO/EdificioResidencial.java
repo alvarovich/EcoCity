@@ -1,5 +1,6 @@
 package SISDEEDIFICIO;
 
+/** Edificio residencial: genera poblacion e impuestos cada mes, consume energia */
 public class EdificioResidencial extends Edificio implements Mantenible {
 
     private int habitantes;

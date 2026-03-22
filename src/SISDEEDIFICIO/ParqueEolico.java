@@ -1,5 +1,6 @@
 package SISDEEDIFICIO;
 
+/** Parque eolico: genera energia de forma limpia con coste de mantenimiento bajo */
 public class ParqueEolico extends EdificioIndustrial implements Mantenible {
 
     public ParqueEolico() {
