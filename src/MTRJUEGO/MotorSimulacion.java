@@ -28,7 +28,6 @@ public class MotorSimulacion {
 
     private void inicializarUsuarios() {
         sisUsuarios.regUsuario(new Jugador("jugador1", "1234"));
-        sisUsuarios.regUsuario(new Administrador("admin", "admin"));
     }
 
     public void iniciar() {
