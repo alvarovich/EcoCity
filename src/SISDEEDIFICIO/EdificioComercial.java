@@ -3,7 +3,7 @@ package SISDEEDIFICIO;
 public class EdificioComercial extends Edificio implements Mantenible {
 
     public EdificioComercial() {
-        super("Centro Comercial", 4000, 50);
+        super("Centro Comercial", 4000, 50, 600);  // costeReparacion: 600€
     }
 
     @Override
@@ -12,9 +12,7 @@ public class EdificioComercial extends Edificio implements Mantenible {
     }
 
     @Override
-    public void reparar() {
-        salud = 100;
-    }
+    public void reparar() { salud = 100; }
 
     @Override
     public void desgastar(int cantidad) {
@@ -24,6 +22,6 @@ public class EdificioComercial extends Edificio implements Mantenible {
 
     @Override
     public String toString() {
-        return nombre + " [Salud: " + salud + "% | Consume: " + consumoEnergia + " energía]";
+        return nombre + " [Salud: " + salud + "% | Consume: " + consumoEnergia + " MW | Reparación: " + costeReparacion + "€]";
     }
 }

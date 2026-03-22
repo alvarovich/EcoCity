@@ -3,22 +3,22 @@ package SISDEEDIFICIO;
 public class CentralNuclear extends EdificioIndustrial implements Mantenible {
 
     public CentralNuclear() {
-        super("Central Nuclear", 10000, 0);
+        super("Central Nuclear", 10000, 0, 3000);  // costeReparacion: 3000€
     }
 
     @Override
     public double producirRecurso() {
-        return 500;
-    }
+    	return 500;
+    	}
 
     @Override
     public String getTipoRecurso() {
-        return "Energía";
-    }
+    	return "Energía";
+    	}
 
     @Override
     public void aplicarEfectoMensual() {
-        System.out.println(nombre + " opera generando 500 unidades de energía. [Salud: " + salud + "%]");
+        System.out.println(nombre + " opera generando 500 MW. [Salud: " + salud + "%]");
         if (salud < 20) {
             throw new RuntimeException(
                 "¡Explosión en la Central Nuclear! Su salud cayó al " + salud + "%. ¡La ciudad ha colapsado!"
@@ -28,8 +28,8 @@ public class CentralNuclear extends EdificioIndustrial implements Mantenible {
 
     @Override
     public void reparar() {
-        salud = 100;
-    }
+    	salud = 100;
+    	}
 
     @Override
     public void desgastar(int cantidad) {
@@ -40,6 +40,6 @@ public class CentralNuclear extends EdificioIndustrial implements Mantenible {
 
     @Override
     public String toString() {
-        return nombre + " [Salud: " + salud + "% | Produce: 500 energía]";
+        return nombre + " [Salud: " + salud + "% | Produce: 500 MW | Reparación: " + costeReparacion + "€]";
     }
 }
