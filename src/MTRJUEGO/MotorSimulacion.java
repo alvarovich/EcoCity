@@ -33,9 +33,9 @@ public class MotorSimulacion {
 
     public void iniciar() {
 
-        System.out.println("╔══════════════════════════════╗");
-        System.out.println("║       BIENVENIDO A ECOCITY   ║");
-        System.out.println("╚══════════════════════════════╝");
+        System.out.println("╔══════════════════════════╗");
+        System.out.println("║   BIENVENIDO A ECOCITY   ║");
+        System.out.println("╚══════════════════════════╝");
 
         Usuario usuarioActual = null;
 

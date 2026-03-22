@@ -16,7 +16,7 @@ public class Ciudad {
     private ArrayList<Edificio> edificios;
 
     public Ciudad() {
-        dinero    = 5000;
+        dinero    = 8000;   // Subido de 5000 a 8000
         energia   = 0;
         poblacion = 0;
         felicidad = 100;
@@ -32,7 +32,7 @@ public class Ciudad {
         }
         dinero -= edificio.getCosto();
         edificios.add(edificio);
-        System.out.println("✅ " + edificio.getNombre() + " construido. Costo: " + edificio.getCosto() + "€");
+        System.out.println(edificio.getNombre() + " construido. Costo: " + edificio.getCosto() + "€");
     }
 
     public ArrayList<Edificio> getEdificios() { return edificios; }
@@ -45,14 +45,14 @@ public class Ciudad {
     public int getFelicidad() { return felicidad; }
 
     public void mostrarEstado(int mes) {
-        System.out.println("\n═══════════════════════════════════");
+        System.out.println("\n══════════════════════════════════");
         System.out.println("ECOCITY — MES " + mes);
-        System.out.println("═══════════════════════════════════");
+        System.out.println("══════════════════════════════════");
         System.out.printf("Dinero:     %d€%n", dinero);
         System.out.printf("Energía:    %d MW%n", energia);
         System.out.printf("Población:  %d%n", poblacion);
         System.out.printf("Felicidad:  %d%%%n", felicidad);
-        System.out.println("-----------------------------------");
+        System.out.println("----------------------------------");
         if (edificios.isEmpty()) {
             System.out.println("  (Sin edificios construidos)");
         } else {
@@ -61,7 +61,7 @@ public class Ciudad {
                 System.out.println("    " + (i + 1) + ". " + edificios.get(i));
             }
         }
-        System.out.println("═══════════════════════════════════");
+        System.out.println("══════════════════════════════════");
     }
 
     public void calcularRecursos() {
@@ -78,13 +78,15 @@ public class Ciudad {
 
             if (e instanceof EdificioResidencial) {
                 poblacion += 50;
-                dinero    += 100;
+                dinero    += 500;   // Subido de 100 a 500
+                System.out.println("Impuestos recaudados: +500€");
             }
 
             if (e instanceof EdificioComercial) {
-                dinero    += 200;
+                dinero    += 800;   // Subido de 200 a 800
                 felicidad += 5;
                 if (felicidad > 100) felicidad = 100;
+                System.out.println("Ingresos comerciales: +800€");
             }
         }
 
