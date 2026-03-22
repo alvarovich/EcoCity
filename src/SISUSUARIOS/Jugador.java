@@ -5,10 +5,10 @@ public class Jugador extends Usuario {
     private int partidasJugadas;
     private int puntuacion;
 
-    public Jugador(String nombreUsuario, String contrasena) {
-        super(nombreUsuario, contrasena, "Jugador");
+    public Jugador(String nombre, String nombreUsuario, String contrasena) {
+        super(nombre, nombreUsuario, contrasena, "Jugador");
         this.partidasJugadas = 0;
-        this.puntuacion = 0;
+        this.puntuacion      = 0;
     }
 
     public int getPartidasJugadas() {
@@ -29,7 +29,8 @@ public class Jugador extends Usuario {
 
     @Override
     public String toString() {
-        return "Jugador [usuario=" + getNombreUsuario() +
+        return "Jugador [nombre=" + getNombre() +
+               ", nickname=" + getNombreUsuario() +
                ", partidasJugadas=" + partidasJugadas +
                ", puntuacion=" + puntuacion + "]";
     }

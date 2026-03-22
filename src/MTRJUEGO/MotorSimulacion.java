@@ -5,6 +5,7 @@ import java.util.Scanner;
 import EVTALEATORIOS.SistemaClima;
 import EXCEPCIONES.FondosInsuficientesException;
 import PERSISTENCIA.GestorPartidas;
+import PERSISTENCIA.GestorUsuariosArchivo;
 import SISDECIUDAD.Ciudad;
 import SISDEEDIFICIO.*;
 import SISUSUARIOS.*;
@@ -16,18 +17,15 @@ public class MotorSimulacion {
     private Scanner sc;
     private SisUsuarios sisUsuarios;
     private GestorPartidas gestorPartidas;
+    private GestorUsuariosArchivo gestorUsuarios;
 
     public MotorSimulacion() {
-        ciudad         = new Ciudad();
-        mes            = 1;
-        sc             = new Scanner(System.in);
-        sisUsuarios    = new SisUsuarios();
-        gestorPartidas = new GestorPartidas();
-        inicializarUsuarios();
-    }
-
-    private void inicializarUsuarios() {
-        sisUsuarios.regUsuario(new Jugador("jugador1", "1234"));
+        ciudad          = new Ciudad();
+        mes             = 1;
+        sc              = new Scanner(System.in);
+        sisUsuarios     = new SisUsuarios();
+        gestorPartidas  = new GestorPartidas();
+        gestorUsuarios  = new GestorUsuariosArchivo();
     }
 
     public void iniciar() {
@@ -36,28 +34,46 @@ public class MotorSimulacion {
         System.out.println("║   BIENVENIDO A ECOCITY   ║");
         System.out.println("╚══════════════════════════╝");
 
+        // REGISTRO
+        System.out.println("\n-- REGISTRO DE JUGADOR --");
+        System.out.print("Introduce tu nombre: ");
+        String nombre = sc.next();
+        System.out.print("Elige un nickname:   ");
+        String nickname = sc.next();
+        System.out.print("Elige una contrasena: ");
+        String pass = sc.next();
+
+        Jugador jugador = new Jugador(nombre, nickname, pass);
+        sisUsuarios.regUsuario(jugador);
+        gestorUsuarios.guardarJugador(jugador);
+
+        System.out.println("Jugador registrado correctamente.");
+
+        // LOGIN
+        System.out.println("\n-- INICIO DE SESION --");
         Usuario usuarioActual = null;
 
         while (usuarioActual == null) {
-            System.out.print("\nNombre de usuario: ");
-            String nombre = sc.next();
-            System.out.print("Contrasena:        ");
-            String pass   = sc.next();
+            System.out.print("Nickname:   ");
+            String nickLogin = sc.next();
+            System.out.print("Contrasena: ");
+            String passLogin = sc.next();
 
-            usuarioActual = sisUsuarios.login(nombre, pass);
+            usuarioActual = sisUsuarios.login(nickLogin, passLogin);
 
             if (usuarioActual == null) {
-                System.out.println("Usuario o contrasena incorrectos. Intentalo de nuevo.");
+                System.out.println("Nickname o contrasena incorrectos. Intentalo de nuevo.");
             }
         }
 
-        System.out.println("\nSesion iniciada como: " + usuarioActual.getNombreUsuario()
-                + " [" + usuarioActual.getRol() + "]");
+        System.out.println("\nSesion iniciada como: " + usuarioActual.getNombre() +
+                " (nickname: " + usuarioActual.getNombreUsuario() + ")");
 
         if (usuarioActual instanceof Jugador) {
             ((Jugador) usuarioActual).sumarPartida();
         }
 
+        // BUCLE PRINCIPAL
         boolean ejecutando = true;
 
         while (ejecutando) {
@@ -99,8 +115,8 @@ public class MotorSimulacion {
         System.out.println("\n¿Que edificio quieres construir?");
         System.out.println("  1. Parque Eolico          (3.000EUR | +120 MW)");
         System.out.println("  2. Central Nuclear        (10.000EUR | +500 MW)");
-        System.out.println("  3. Barrio Residencial     (2.000EUR | +50 hab/mes | +500EUR/mes)");
-        System.out.println("  4. Centro Comercial       (4.000EUR | +800EUR/mes | +5 felicidad)");
+        System.out.println("  3. Barrio Residencial     (2.000EUR | +50 hab/mes | +200EUR/mes)");
+        System.out.println("  4. Centro Comercial       (4.000EUR | +350EUR/mes | +5 felicidad)");
         System.out.print("Opcion: ");
 
         int opcion;
@@ -197,6 +213,6 @@ public class MotorSimulacion {
     private void guardarYSalir(Usuario usuario) {
         String ruta = "partida_" + usuario.getNombreUsuario() + ".txt";
         gestorPartidas.guardarPartida(ciudad, ruta);
-        System.out.println("Hasta pronto, " + usuario.getNombreUsuario() + "!");
+        System.out.println("Hasta pronto, " + usuario.getNombre() + "!");
     }
 }

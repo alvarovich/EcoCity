@@ -35,14 +35,29 @@ public class Ciudad {
         System.out.println(edificio.getNombre() + " construido. Costo: " + edificio.getCosto() + "EUR");
     }
 
-    public ArrayList<Edificio> getEdificios() { return edificios; }
+    public ArrayList<Edificio> getEdificios() {
+        return edificios;
+    }
 
-    public int getDinero()    { return dinero; }
-    public void setDinero(int dinero) { this.dinero = dinero; }
+    public int getDinero() {
+        return dinero;
+    }
 
-    public int getEnergia()   { return energia; }
-    public int getPoblacion() { return poblacion; }
-    public int getFelicidad() { return felicidad; }
+    public void setDinero(int dinero) {
+        this.dinero = dinero;
+    }
+
+    public int getEnergia() {
+        return energia;
+    }
+
+    public int getPoblacion() {
+        return poblacion;
+    }
+
+    public int getFelicidad() {
+        return felicidad;
+    }
 
     public void mostrarEstado(int mes) {
         System.out.println("\n══════════════════════════════════════");
@@ -78,12 +93,12 @@ public class Ciudad {
 
             if (e instanceof EdificioResidencial) {
                 poblacion += 50;
-                dinero    += 200;   // Bajado de 500 a 200
+                dinero    += 200;
                 System.out.println("  Impuestos recaudados: +200EUR");
             }
 
             if (e instanceof EdificioComercial) {
-                dinero    += 350;   // Bajado de 800 a 350
+                dinero    += 350;
                 felicidad += 5;
                 if (felicidad > 100) felicidad = 100;
                 System.out.println("  Ingresos comerciales: +350EUR");

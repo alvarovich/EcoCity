@@ -5,14 +5,20 @@ import java.security.NoSuchAlgorithmException;
 
 public class Usuario {
 
+    private String nombre;
     private String nombreUsuario;
     private String passwordHash;
     private String rol;
 
-    public Usuario(String nombreUsuario, String contrasena, String rol) {
+    public Usuario(String nombre, String nombreUsuario, String contrasena, String rol) {
+        this.nombre       = nombre;
         this.nombreUsuario = nombreUsuario;
         this.passwordHash = generarHash(contrasena);
-        this.rol = rol;
+        this.rol          = rol;
+    }
+
+    public String getNombre() {
+        return nombre;
     }
 
     public String getNombreUsuario() {
@@ -41,12 +47,12 @@ public class Usuario {
             return sb.toString();
 
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error al generar hash de contraseña");
+            throw new RuntimeException("Error al generar hash de contrasena");
         }
     }
 
     @Override
     public String toString() {
-        return "Usuario [nombreUsuario=" + nombreUsuario + ", rol=" + rol + "]";
+        return "Usuario [nombre=" + nombre + ", nickname=" + nombreUsuario + ", rol=" + rol + "]";
     }
 }
