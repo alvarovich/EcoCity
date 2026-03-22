@@ -1,5 +1,11 @@
 package EVTALEATORIOS;
 
+import SISDECIUDAD.Ciudad;
+import SISDEEDIFICIO.Edificio;
+import SISDEEDIFICIO.GeneradorRecursos;
+import SISDEEDIFICIO.Mantenible;
+import SISDEEDIFICIO.ParqueEolico; 
+
 public class Eventos {
 	
 	public static void tormentaElectrica(Ciudad ciudad) {

@@ -1,7 +1,7 @@
 package PERSISTENCIA;
 
-import ARQDELSIS.Ciudad;
-import ARQDELSIS.Edificio;
+import SISDECIUDAD.Ciudad;
+import SISDEEDIFICIO.Edificio;
 
 import java.io.IOException;
 

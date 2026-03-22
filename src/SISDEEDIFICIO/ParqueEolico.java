@@ -1,6 +1,6 @@
 package SISDEEDIFICIO;
 
-import ARQDELSIS.Mantenible;
+import SISDEEDIFICIO.Mantenible;
 
 public class ParqueEolico extends EdificioIndustrial implements Mantenible {
 	

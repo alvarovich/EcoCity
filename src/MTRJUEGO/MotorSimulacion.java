@@ -1,6 +1,8 @@
 package MTRJUEGO;
 
 import java.util.Scanner;
+import SISDECIUDAD.Ciudad;
+import SISDEEDIFICIO.GeneradorRecursos;
 
 public class MotorSimulacion {
 	

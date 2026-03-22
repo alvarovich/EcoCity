@@ -1,5 +1,7 @@
 package SISDECIUDAD;
 import java.util.ArrayList;
+import SISDEEDIFICIO.Edificio;
+import SISDEEDIFICIO.GeneradorRecursos;
 
 public class Ciudad {
 

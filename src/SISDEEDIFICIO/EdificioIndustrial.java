@@ -1,7 +1,7 @@
 package SISDEEDIFICIO;
 
-import ARQDELSIS.Edificio;
-import ARQDELSIS.GeneradorRecursos;
+import SISDEEDIFICIO.Edificio;
+import SISDEEDIFICIO.GeneradorRecursos;
 
 public abstract class EdificioIndustrial extends Edificio implements GeneradorRecursos{
 

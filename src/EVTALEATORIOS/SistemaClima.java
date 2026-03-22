@@ -1,6 +1,7 @@
 package EVTALEATORIOS;
 
 import java.util.Random;
+import SISDECIUDAD.Ciudad;
 
 public class SistemaClima {
 	

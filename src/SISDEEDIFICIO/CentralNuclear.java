@@ -1,6 +1,6 @@
 package SISDEEDIFICIO;
 
-import ARQDELSIS.Mantenible;
+import SISDEEDIFICIO.Mantenible;
 
 public class CentralNuclear extends EdificioIndustrial implements Mantenible {
 

@@ -1,7 +1,7 @@
 package SISDEEDIFICIO;
 
-import ARQDELSIS.Edificio;
-import ARQDELSIS.Mantenible;
+import SISDEEDIFICIO.Edificio;
+import SISDEEDIFICIO.Mantenible;
 
 public class EdificioResidencial extends Edificio implements Mantenible{
 
