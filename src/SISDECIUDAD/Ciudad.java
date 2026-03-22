@@ -23,6 +23,18 @@ public class Ciudad {
 		return edificios;
 	}
 	
+	public int getDinero() {
+	    return dinero;
+	}
+
+	public int getEnergia() {
+	    return energia;
+	}
+
+	public int getPoblacion() {
+	    return poblacion;
+	}	
+	
 	public void mostrarEstado (int mes) {
 		System.out.println("\n--- ESTADO DE ECOCITY - MES " + mes + " ---");
 		System.out.println("Recursos: $" + dinero + " | Energía: +" + energia + "MW | Población: " + poblacion);
