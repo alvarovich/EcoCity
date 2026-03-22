@@ -1,0 +1,12 @@
+ECOCITY SAVE
+Dinero: 11800
+Energia: 600
+Poblacion: 1450
+EDIFICIOS
+Barrio Residencial [Salud: 90% | Habitantes: 100 | Reparación: 300€]
+Parque Eólico [Salud: 80% | Produce: 120 MW | Reparación: 500€]
+Centro Comercial [Salud: 90% | Consume: 50 MW | Reparación: 600€]
+Parque Eólico [Salud: 80% | Produce: 120 MW | Reparación: 500€]
+Centro Comercial [Salud: 90% | Consume: 50 MW | Reparación: 600€]
+Barrio Residencial [Salud: 90% | Habitantes: 100 | Reparación: 300€]
+Central Nuclear [Salud: 80% | Produce: 500 MW | Reparación: 3000€]

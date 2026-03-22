@@ -1,31 +1,37 @@
 package SISDEEDIFICIO;
 
-import ARQDELSIS.Edificio;
-import ARQDELSIS.Mantenible;
+/** Edificio residencial: genera poblacion e impuestos cada mes, consume energia */
+public class EdificioResidencial extends Edificio implements Mantenible {
 
-public class EdificioResidencial extends Edificio implements Mantenible{
+    private int habitantes;
 
-	private int habitantes;
-	
-	public EdificioResidencial ( String nombre, int costo, int consumoEnergia, int habitantes) {
-		super(nombre, costo, consumoEnergia);
-		this.habitantes = habitantes;
-	}
+    public EdificioResidencial(String nombre, int costo, int consumoEnergia, int habitantes) {
+        super(nombre, costo, consumoEnergia, 500);
+        this.habitantes = habitantes;
+    }
 
-	@Override
-	public void aplicarEfectoMensual() {
-		System.out.println(nombre + "genera impuestos de sus habitantes.");
-	}
-		
-	@Override
-	public void reparar() {
-		salud = 100;
-	}
-	
-	@Override
-	public void desgastar(int cantidad) {
-		salud -= cantidad;
-		if (salud < 0) salud = 0;
-	}
-	
+    @Override
+    public void aplicarEfectoMensual() {
+        System.out.println(nombre + " genera impuestos de sus " + habitantes + " habitantes.");
+    }
+
+    @Override
+    public void reparar() {
+        salud = 100;
+    }
+
+    @Override
+    public void desgastar(int cantidad) {
+        salud -= cantidad;
+        if (salud < 0) salud = 0;
+    }
+
+    public int getHabitantes() {
+        return habitantes;
+    }
+
+    @Override
+    public String toString() {
+        return nombre + " [Salud: " + salud + "% | Habitantes: " + habitantes + " | Reparacion: " + costeReparacion + "EUR]";
+    }
 }

@@ -1,19 +1,28 @@
 package SISDEEDIFICIO;
 
+/**
+ * Clase abstracta base de todos los edificios del juego.
+ * Define los atributos comunes y obliga a implementar el efecto mensual.
+ */
 public abstract class Edificio {
 
     protected String nombre;
     protected int costo;
+    // Energia que consume el edificio cada mes
     protected int consumoEnergia;
+    // Salud entre 0 y 100; llegar a 0 tiene consecuencias para la ciudad
     protected int salud;
+    protected int costeReparacion;
 
-    public Edificio(String nombre, int costo, int consumoEnergia) {
-        this.nombre = nombre;
-        this.costo = costo;
-        this.consumoEnergia = consumoEnergia;
-        this.salud = 100;
+    public Edificio(String nombre, int costo, int consumoEnergia, int costeReparacion) {
+        this.nombre          = nombre;
+        this.costo           = costo;
+        this.consumoEnergia  = consumoEnergia;
+        this.costeReparacion = costeReparacion;
+        this.salud           = 100;
     }
 
+    /** Cada subclase define que ocurre cuando pasa un mes */
     public abstract void aplicarEfectoMensual();
 
     public String getNombre() {
@@ -30,6 +39,10 @@ public abstract class Edificio {
 
     public int getSalud() {
         return salud;
+    }
+
+    public int getCosteReparacion() {
+        return costeReparacion;
     }
 
     public void setSalud(int salud) {

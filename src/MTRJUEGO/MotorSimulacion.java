@@ -1,75 +1,221 @@
 package MTRJUEGO;
 
 import java.util.Scanner;
+import EVTALEATORIOS.SistemaClima;
+import EXCEPCIONES.FondosInsuficientesException;
+import PERSISTENCIA.GestorUsuariosArchivo;
+import SISDECIUDAD.Ciudad;
+import SISDEEDIFICIO.*;
+import SISUSUARIOS.*;
 
+/**
+ * Motor principal del juego. Gestiona el registro, login,
+ * y el bucle de turnos mensuales.
+ */
 public class MotorSimulacion {
-	
-	private Ciudad ciudad;
-	private int mes;
-	private Scanner sc;
-	
-	public MotorSimulacion() {
-		ciudad = new Ciudad();
-		mes = 1;
-		sc = new Scanner (System.in);
-	}
-	
-	public void Iniciar () {
-		boolean ejecutando = true;
-		
-		while (ejecutando) {
-			
-			ciudad.mostrarEstado(mes);
-			mostrarMenu();
-			
-			int opcion = sc.nextInt();
-			
-			switch (opcion) {
-				case 1:
-					construir();
-					break;
-					
-				case 2:
-					reparar();
-					break;
-				
-				case 3:
-					cicloMensual();
-					break;
-					
-				case 4:
-					ejecutando = false;
-					System.out.println("Saliendo del juego...");
-					break;
-				
-				default:
-					System.out.println("Elige una opción del menú");
-					break;
-				
-			}
-			
-		}
-	}
-	
-	private void mostrarMenu() {
 
-	    System.out.println("\n¿Qué desea hacer?");
-	    System.out.println("1. Construir");
-	    System.out.println("2. Reparar");
-	    System.out.println("3. Pasar Mes");
-	    System.out.println("4. Guardar y Salir");
+    private Ciudad ciudad;
+    private int mes;
+    private Scanner sc;
+    private SisUsuarios sisUsuarios;
+    // Gestiona el guardado de datos del jugador en archivo
+    private GestorUsuariosArchivo gestorUsuarios;
 
-	}
-	
-	private void cicloMensual() {
-		ciudad.calcularRecursos();
-		
-		for (Edificio e : ciudad.getEdificio()) {
-			e.aplicarEfectoMensual();
-		}
-		
-		SistemaClima.generarEvento(ciudad);
-		
-		mes++;
-	}
+    public MotorSimulacion() {
+        ciudad         = new Ciudad();
+        mes            = 1;
+        sc             = new Scanner(System.in);
+        sisUsuarios    = new SisUsuarios();
+        gestorUsuarios = new GestorUsuariosArchivo();
+    }
+
+    /** Arranca el juego: registro, login y bucle principal */
+    public void iniciar() {
+
+        System.out.println("╔══════════════════════════╗");
+        System.out.println("║   BIENVENIDO A ECOCITY   ║");
+        System.out.println("╚══════════════════════════╝");
+
+        // Recogemos los datos del jugador antes de entrar al juego
+        System.out.println("\n-- REGISTRO DE JUGADOR --");
+        System.out.print("Introduce tu nombre: ");
+        String nombre = sc.next();
+        System.out.print("Elige un nickname:   ");
+        String nickname = sc.next();
+        System.out.print("Elige una contrasena: ");
+        String pass = sc.next();
+
+        // Creamos el jugador, lo registramos en memoria y guardamos sus datos
+        Jugador jugador = new Jugador(nombre, nickname, pass);
+        sisUsuarios.regUsuario(jugador);
+        gestorUsuarios.guardarJugador(jugador);
+        System.out.println("Jugador registrado correctamente.");
+
+        // El login verifica que el jugador recuerde sus credenciales
+        System.out.println("\n-- INICIO DE SESION --");
+        Usuario usuarioActual = null;
+
+        while (usuarioActual == null) {
+            System.out.print("Nickname:   ");
+            String nickLogin = sc.next();
+            System.out.print("Contrasena: ");
+            String passLogin = sc.next();
+
+            usuarioActual = sisUsuarios.login(nickLogin, passLogin);
+
+            if (usuarioActual == null) {
+                System.out.println("Nickname o contrasena incorrectos. Intentalo de nuevo.");
+            }
+        }
+
+        System.out.println("\nSesion iniciada como: " + usuarioActual.getNombre() +
+                " (nickname: " + usuarioActual.getNombreUsuario() + ")");
+
+        // Contabilizamos la partida al jugador
+        if (usuarioActual instanceof Jugador) {
+            ((Jugador) usuarioActual).sumarPartida();
+        }
+
+        // Bucle principal: cada iteracion es un turno de juego
+        boolean ejecutando = true;
+        while (ejecutando) {
+            ciudad.mostrarEstado(mes);
+            mostrarMenu();
+
+            int opcion;
+            try {
+                opcion = Integer.parseInt(sc.next());
+            } catch (NumberFormatException e) {
+                System.out.println("Introduce un numero valido.");
+                continue;
+            }
+
+            switch (opcion) {
+                case 1: construir();    break;
+                case 2: reparar();      break;
+                case 3: cicloMensual(); break;
+                case 4:
+                    System.out.println("Hasta pronto, " + usuarioActual.getNombre() + "!");
+                    ejecutando = false;
+                    break;
+                default:
+                    System.out.println("Elige una opcion del menu.");
+            }
+        }
+    }
+
+    /** Muestra las opciones disponibles cada turno */
+    private void mostrarMenu() {
+        System.out.println("\n¿Que deseas hacer?");
+        System.out.println("  1. Construir edificio");
+        System.out.println("  2. Reparar edificio");
+        System.out.println("  3. Pasar mes");
+        System.out.println("  4. Salir");
+        System.out.print("Opcion: ");
+    }
+
+    /** Muestra el catalogo de edificios y construye el elegido descontando su coste */
+    private void construir() {
+        System.out.println("\n¿Que edificio quieres construir?");
+        System.out.println("  1. Parque Eolico          (3.000EUR | +120 MW)");
+        System.out.println("  2. Central Nuclear        (10.000EUR | +500 MW)");
+        System.out.println("  3. Barrio Residencial     (2.000EUR | +50 hab/mes | +200EUR/mes)");
+        System.out.println("  4. Centro Comercial       (4.000EUR | +350EUR/mes | +5 felicidad)");
+        System.out.print("Opcion: ");
+
+        int opcion;
+        try {
+            opcion = Integer.parseInt(sc.next());
+        } catch (NumberFormatException e) {
+            System.out.println("Opcion invalida.");
+            return;
+        }
+
+        try {
+            switch (opcion) {
+                case 1: ciudad.agregarEdificio(new ParqueEolico());   break;
+                case 2: ciudad.agregarEdificio(new CentralNuclear()); break;
+                case 3: ciudad.agregarEdificio(new EdificioResidencial("Barrio Residencial", 2000, 20, 100)); break;
+                case 4: ciudad.agregarEdificio(new EdificioComercial()); break;
+                default: System.out.println("Opcion invalida.");
+            }
+        } catch (FondosInsuficientesException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /** Permite reparar un edificio daniado descontando el coste de reparacion */
+    private void reparar() {
+        if (ciudad.getEdificios().isEmpty()) {
+            System.out.println("No hay edificios construidos.");
+            return;
+        }
+
+        System.out.println("\nSelecciona el edificio a reparar:");
+        for (int i = 0; i < ciudad.getEdificios().size(); i++) {
+            System.out.println("  " + (i + 1) + ". " + ciudad.getEdificios().get(i));
+        }
+        System.out.print("Opcion: ");
+
+        int index;
+        try {
+            index = Integer.parseInt(sc.next()) - 1;
+        } catch (NumberFormatException e) {
+            System.out.println("Opcion invalida.");
+            return;
+        }
+
+        if (index >= 0 && index < ciudad.getEdificios().size()) {
+            Edificio e = ciudad.getEdificios().get(index);
+
+            if (e instanceof Mantenible) {
+
+                // No tiene sentido reparar algo que ya esta al maximo
+                if (e.getSalud() == 100) {
+                    System.out.println(e.getNombre() + " ya esta en perfecto estado.");
+                    return;
+                }
+
+                int coste = e.getCosteReparacion();
+
+                if (ciudad.getDinero() < coste) {
+                    System.out.println("Fondos insuficientes. Necesitas " + coste +
+                            "EUR y tienes " + ciudad.getDinero() + "EUR.");
+                    return;
+                }
+
+                ciudad.setDinero(ciudad.getDinero() - coste);
+                ((Mantenible) e).reparar();
+                System.out.println(e.getNombre() + " reparado por " + coste + "EUR. Salud: 100%");
+
+            } else {
+                System.out.println("Este edificio no es mantenible.");
+            }
+        } else {
+            System.out.println("Seleccion invalida.");
+        }
+    }
+
+    /**
+     * Procesa un mes: calcula recursos, aplica efectos de cada edificio
+     * y lanza un evento climatico aleatorio. Si hay catastrofe, termina el juego.
+     */
+    private void cicloMensual() {
+        System.out.println("\nProcesando mes " + mes + "...");
+        try {
+            ciudad.calcularRecursos();
+
+            for (Edificio e : ciudad.getEdificios()) {
+                e.aplicarEfectoMensual();
+            }
+
+            SistemaClima.generarEvento(ciudad);
+            mes++;
+
+        } catch (RuntimeException e) {
+            System.out.println("CATASTROFE: " + e.getMessage());
+            System.out.println("La ciudad ha colapsado. Fin de la partida.");
+            System.exit(0);
+        }
+    }
 }
